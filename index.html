@@ -6,49 +6,7 @@
     <title>Autonomia Previdenciária | Plataforma de Inteligência & Diagnóstico Sociojurídico</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root { --primary-dark: #0f172a; --primary-navy: #1e293b; --accent-blue: #0284c7; --accent-hover: #0369a1; --gold-accent: #d4af37; --bg-light: #f8fafc; --card-bg: #ffffff; --text-main: #334155; --text-muted: #64748b; --border-color: #e2e8f0; --success-green: #10b981; --gov-green: #00420c; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; }
-        body { background-color: var(--bg-light); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; line-height: 1.5; }
-        .top-info-bar { background: var(--primary-dark); color: #94a3b8; font-size: 0.8rem; padding: 8px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; }
-        .top-info-bar .protocol { color: var(--gold-accent); font-weight: 600; }
-        header { background: var(--primary-navy); color: #ffffff; padding: 18px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-bottom: 3px solid var(--gold-accent); }
-        header h1 { font-size: 1.35rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
-        header h1 i { color: var(--gold-accent); }
-        .badge-gov { background: rgba(2, 132, 199, 0.2); color: #38bdf8; border: 1px solid #0284c7; font-size: 0.75rem; padding: 3px 8px; border-radius: 4px; font-weight: 600; }
-        .user-info { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.05); padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); font-size: 0.85rem; }
-        .user-info i { color: var(--gold-accent); }
-        .app-container { display: flex; flex: 1; max-width: 1350px; width: 100%; margin: 20px auto; padding: 0 15px; gap: 20px; }
-        .sidebar { width: 280px; background: var(--card-bg); border-radius: 12px; padding: 16px; border: 1px solid var(--border-color); height: fit-content; }
-        .sidebar-title { font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); margin-bottom: 12px; padding-left: 8px; }
-        .nav-btn { width: 100%; text-align: left; padding: 12px 14px; margin-bottom: 8px; border: none; background: transparent; color: var(--text-main); font-weight: 600; font-size: 0.9rem; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: all 0.2s ease; }
-        .nav-btn i { font-size: 1.1rem; color: var(--text-muted); width: 20px; }
-        .nav-btn:hover { background: #f1f5f9; color: var(--accent-blue); }
-        .nav-btn.active { background: var(--accent-blue); color: #ffffff; box-shadow: 0 4px 10px rgba(2, 132, 199, 0.25); }
-        .nav-btn.active i { color: #ffffff; }
-        .sidebar-box { margin-top: 20px; background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 12px; font-size: 0.8rem; color: #0369a1; }
-        .sidebar-box h4 { font-weight: 700; margin-bottom: 5px; display: flex; align-items: center; gap: 6px; }
-        .workspace { flex: 1; display: flex; flex-direction: column; gap: 20px; }
-        .status-banner { background: #ffffff; border: 1px solid var(--border-color); border-left: 4px solid var(--accent-blue); padding: 16px 20px; border-radius: 10px; font-size: 0.9rem; display: flex; justify-content: space-between; align-items: center; }
-        .status-banner .sync-status { display: flex; align-items: center; gap: 10px; }
-        .pulse-dot { width: 10px; height: 10px; background-color: var(--success-green); border-radius: 50%; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); animation: pulse 1.6s infinite; }
-        @keyframes pulse { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
-        .tab-content { display: none; background: var(--card-bg); padding: 28px; border-radius: 12px; border: 1px solid var(--border-color); }
-        .tab-content.active { display: block; }
-        .tab-header { border-bottom: 2px solid var(--bg-light); padding-bottom: 14px; margin-bottom: 20px; }
-        .tab-title { font-size: 1.3rem; font-weight: 700; color: var(--primary-dark); display: flex; align-items: center; gap: 10px; }
-        .tab-subtitle { font-size: 0.88rem; color: var(--text-muted); margin-top: 4px; }
-        .btn-primary { background: var(--accent-blue); color: #ffffff; border: none; padding: 12px 22px; font-weight: 600; font-size: 0.9rem; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; }
-        .btn-gov { background: var(--gov-green); color: #ffffff; border: none; padding: 12px 22px; font-weight: 600; font-size: 0.9rem; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; }
-        .result-box { background: #f8fafc; border: 1px solid var(--border-color); border-left: 4px solid var(--accent-blue); padding: 18px; border-radius: 8px; margin-top: 20px; font-size: 0.92rem; white-space: pre-wrap; line-height: 1.6; color: #1e293b; }
-        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .metric-card { background: #f1f5f9; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; }
-        .metric-card .title { font-size: 0.78rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); }
-        .metric-card .value { font-size: 1.25rem; font-weight: 800; color: var(--primary-dark); margin-top: 5px; }
-        .legal-footer-box { margin-top: 25px; background: #fffbebf5; border: 1px solid #fef3c7; padding: 15px; border-radius: 8px; font-size: 0.8rem; color: #b45309; display: flex; gap: 12px; }
-        footer { background: var(--primary-dark); color: #94a3b8; text-align: center; padding: 22px 15px; font-size: 0.85rem; margin-top: auto; border-top: 1px solid #334155; }
-        footer strong { color: #f1f5f9; }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div class="top-info-bar">
@@ -56,17 +14,17 @@
         <div>NUP do Processo/Estratégia: <span class="protocol">36777.255331/2026-99</span> | Conforme Res. OAB & CPC Art. 77</div>
     </div>
     <header>
-        <h1><i class="fa-solid fa-shield-halved"></i> Autonomia Previdenciária <span class="badge-gov">Sincronização Autônoma</span></h1>
+        <h1><i class="fa-solid fa-shield-halved"></i> Autonomia Previdenciária <span class="badge-gov">Sincronização & Envio Manual</span></h1>
         <div class="user-info"><i class="fa-solid fa-user-check"></i> <span><strong>José Junior de Oliveira</strong> (CBO 2521-05)</span></div>
     </header>
     <div class="app-container">
         <div class="sidebar">
             <div class="sidebar-title">Módulos de Auditoria</div>
-            <button class="nav-btn active" onclick="openTab('busca-auto')"><i class="fa-solid fa-bolt"></i> Busca Automática Gov.br</button>
-            <button class="nav-btn" onclick="openTab('ppp')"><i class="fa-solid fa-file-waveform"></i> Analisador de PPP e Laudos</button>
-            <button class="nav-btn" onclick="openTab('chat')"><i class="fa-solid fa-robot"></i> Assistente IA (Gemini)</button>
-            <button class="nav-btn" onclick="openTab('historico')"><i class="fa-solid fa-timeline"></i> Histórico CNIS & CTPS</button>
-            <button class="nav-btn" onclick="openTab('minuta')"><i class="fa-solid fa-file-signature"></i> Gerador de Minutas</button>
+            <button class="nav-btn active" onclick="openTab('busca-auto', this)"><i class="fa-solid fa-bolt"></i> Busca / Envio Manual</button>
+            <button class="nav-btn" onclick="openTab('ppp', this)"><i class="fa-solid fa-file-waveform"></i> Analisador de PPP e Laudos</button>
+            <button class="nav-btn" onclick="openTab('chat', this)"><i class="fa-solid fa-robot"></i> Assistente IA (Gemini)</button>
+            <button class="nav-btn" onclick="openTab('historico', this)"><i class="fa-solid fa-timeline"></i> Histórico CNIS & CTPS</button>
+            <button class="nav-btn" onclick="openTab('minuta', this)"><i class="fa-solid fa-file-signature"></i> Gerador de Minutas</button>
             <div class="sidebar-box">
                 <h4><i class="fa-solid fa-lock"></i> Segurança & LGPD</h4>
                 <p>Dados protegidos via OAuth 2.0 e criptografia de ponta a ponta.</p>
@@ -74,23 +32,32 @@
         </div>
         <div class="workspace">
             <div class="status-banner">
-                <div class="sync-status"><div class="pulse-dot"></div> <span><strong>Status do Sistema:</strong> Conexão ativa com Dataprev, INSS e eSocial.</span></div>
+                <div class="sync-status"><div class="pulse-dot"></div> <span><strong>Status do Sistema:</strong> Pronto para recepção automática e manual.</span></div>
                 <span style="font-size:0.8rem; color:var(--text-muted);"><i class="fa-solid fa-arrows-rotate"></i> Tempo Real</span>
             </div>
             <div id="busca-auto" class="tab-content active">
                 <div class="tab-header">
                     <div>
-                        <div class="tab-title"><i class="fa-solid fa-cloud-arrow-down" style="color:var(--accent-blue);"></i> Resgate Autônomo de Informações Previdenciárias</div>
-                        <div class="tab-subtitle">Conexão direta às bases de dados oficiais sem necessidade de preenchimento manual.</div>
+                        <div class="tab-title"><i class="fa-solid fa-cloud-arrow-down" style="color:var(--accent-blue);"></i> Resgate & Envio Manual de Documentos</div>
+                        <div class="tab-subtitle">Conexão via Gov.br ou upload manual de arquivos (CNIS, PPP, CTPS).</div>
                     </div>
                 </div>
                 <div class="metrics-grid">
                     <div class="metric-card"><div class="title">Fontes Mapeadas</div><div class="value">INSS / eSocial / CTPS</div></div>
-                    <div class="metric-card"><div class="title">Autenticação</div><div class="value">Gov.br OAUTH 2.0</div></div>
-                    <div class="metric-card"><div class="title">Velocidade da Busca</div><div class="value">< 2.4 Segundos</div></div>
+                    <div class="metric-card"><div class="title">Modo de Operação</div><div class="value">Manual / Automático</div></div>
+                    <div class="metric-card"><div class="title">Status do Processamento</div><div class="value">Pronto</div></div>
                 </div>
-                <p style="font-size:0.92rem; margin-bottom:18px;">Extração automática de vínculos do CNIS, registros de trabalho do eSocial e PPPs emitidos pelas empresas.</p>
-                <button class="btn-gov" onclick="executarSincronizacao()"><i class="fa-solid fa-key"></i> Autenticar com Gov.br & Iniciar Busca Automática</button>
+                <button class="btn-gov" onclick="executarSincronizacao()"><i class="fa-solid fa-key"></i> Autenticar Gov.br & Iniciar Busca Automática</button>
+                <div class="upload-container">
+                    <div class="upload-title"><i class="fa-solid fa-file-arrow-up"></i> Envio Manual de Documentos para Análise</div>
+                    <div class="upload-box" onclick="document.getElementById('file-input').click()">
+                        <i class="fa-solid fa-folder-open"></i>
+                        <p><strong>Clique aqui</strong> para selecionar arquivos (PDF, PNG, JPG) do CNIS, CTPS ou PPP.</p>
+                        <input type="file" id="file-input" accept=".pdf,.png,.jpg,.jpeg" onchange="mostrarArquivoSelecionado(this)">
+                        <div id="file-info" class="file-info"></div>
+                    </div>
+                    <button class="btn-primary" style="margin-top: 15px;" onclick="enviarDocumentoManual()"><i class="fa-solid fa-upload"></i> Processar Documento Enviado</button>
+                </div>
                 <div id="res-busca" class="result-box" style="display:none;"></div>
             </div>
             <div id="ppp" class="tab-content">
@@ -100,17 +67,25 @@
                         <div class="tab-subtitle">Processamento computacional de dosimetrias e fatores de risco.</div>
                     </div>
                 </div>
-                <button class="btn-primary" onclick="analisarPPPAuto()"><i class="fa-solid fa-wand-magic-sparkles"></i> Processar Laudos Resgatados</button>
+                <button class="btn-primary" onclick="analisarPPPAuto()"><i class="fa-solid fa-wand-magic-sparkles"></i> Processar Laudos Resgatados/Enviados</button>
                 <div id="res-ppp" class="result-box" style="display:none;"></div>
             </div>
             <div id="chat" class="tab-content">
                 <div class="tab-header">
                     <div>
                         <div class="tab-title"><i class="fa-solid fa-brain" style="color:var(--accent-blue);"></i> Assistente IA Especializado (Gemini)</div>
-                        <div class="tab-subtitle">Tradução de jargão técnico para linguagem simples.</div>
+                        <div class="tab-subtitle">Tradução de jargão técnico e suporte no diagnóstico sociojurídico.</div>
                     </div>
                 </div>
-                <div id="res-chat" class="result-box" style="margin-top:0;"><strong>[SISTEMA DE IA PRONTO E CONECTADO]:</strong> Todos os dados resgatados foram integrados à IA. Como posso ajudar no diagnóstico?</div>
+                <div class="chat-box" id="chat-messages">
+                    <div class="chat-msg ia">
+                        <strong>[SISTEMA DE IA PRONTO]:</strong> Olá, José Junior! Todos os dados e laudos enviados estão integrados. Qual dúvida técnica ou jurídica você deseja analisar agora?
+                    </div>
+                </div>
+                <div class="chat-input-group">
+                    <input type="text" id="chat-input-text" class="chat-input" placeholder="Digite sua dúvida ou comando (ex: Como funciona a conversão 1.4?)..." onkeypress="if(event.key === 'Enter') enviarMensagemChat()">
+                    <button class="btn-primary" onclick="enviarMensagemChat()"><i class="fa-solid fa-paper-plane"></i> Enviar</button>
+                </div>
             </div>
             <div id="historico" class="tab-content">
                 <div class="tab-header">
@@ -119,13 +94,12 @@
                         <div class="tab-subtitle">Linha do tempo consolidando períodos urbanos, rurais e especiais.</div>
                     </div>
                 </div>
-                <div id="res-historico" class="result-box" style="margin-top:0;">✔ Vínculos do CNIS e eSocial sincronizados automaticamente.</div>
+                <div id="res-historico" class="result-box" style="margin-top:0;">✔ Aguardando envio de documentos ou busca para calcular.</div>
             </div>
             <div id="minuta" class="tab-content">
                 <div class="tab-header">
                     <div>
-                        <div class="tab-title"><i class="fa-solid fa-scale-unbalanced-flip" style="color:var(--accent-blue);"></i> Gerador de Minutas Exordiais</div>
-                        <div class="tab-subtitle">Elaboração automatizada para conferência do advogado.</div>
+                        <div class="tab-title"><i class="fa-solid fa-scale-unbalanced-flip" style="color:var(--accent-blue);"></i> Gerador de Minutas Exordiais</div>cat << 'EOF' >> index.html
                     </div>
                 </div>
                 <button class="btn-primary" onclick="gerarMinutaAuto()"><i class="fa-solid fa-file-export"></i> Gerar Rascunho Exordial</button>
@@ -142,28 +116,6 @@
         <p>Estrategista & Administrador Responsável: <strong>José Junior de Oliveira</strong> (CBO 2521-05)</p>
         <p style="color:#64748b; font-size:0.78rem; margin-top:8px;">E-mail: nairana06@gmail.com | WhatsApp: (33) 99862-9217 | Catanduva - SP</p>
     </footer>
-    <script>
-        function openTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            event.currentTarget.classList.add('active');
-        }
-        function executarSincronizacao() {
-            const box = document.getElementById('res-busca');
-            box.style.display = 'block';
-            box.innerHTML = "⏳ <strong>Conectando aos servidores do Gov.br e Dataprev...</strong>\n\n✔ Autenticação OAuth 2.0: Concluída\n✔ Extrato CNIS: 38 vínculos recuperados\n✔ eSocial / CTPS Digital: Sincronizados\n✔ Saúde Ocupacional: 4 PPPs identificados\n\n🎉 <strong>BUSCA AUTOMÁTICA FINALIZADA COM SUCESSO!</strong>";
-        }
-        function analisarPPPAuto() {
-            const box = document.getElementById('res-ppp');
-            box.style.display = 'block';
-            box.innerHTML = "<strong>[DIAGNÓSTICO AUTOMÁTICO DE LAUDOS]</strong>\n\n• Ruído Contínuo: 88.5 dB(A)\n• Agentes Químicos: Hidrocarbonetos e Solventes\n• Tempo Especial Apurado: 12 anos, 4 meses e 18 dias\n• Enquadramento: Apto para conversão multiplicador 1.4 ou Aposentadoria Especial.";
-        }
-        function gerarMinutaAuto() {
-            const box = document.getElementById('res-minuta');
-            box.style.display = 'block';
-            box.innerHTML = "EXCELENTÍSSIMO(A) SENHOR(A) DOUTOR(A) JUIZ(A) FEDERAL DA VARA PREVIDENCIÁRIA DE CATANDUVA/SP\n\nREQUERENTE: [Segurado Autenticado via Gov.br]\nREQUERIDO: INSS\n\nDOS FATOS E DO DIREITO:\nConforme dados unificados diretamente da base do INSS e do eSocial via integração autônoma, verifica-se que o Autor esteve exposto a agentes nocivos (ruído 88.5 dB(A) e químicos)...\n\n[RASCUNHO GERADO AUTOMATICAMENTE POR IA - SUJEITO À ASSINATURA DE ADVOGADO]";
-        }
-    </script>
+    <script src="js/app.js"></script>
 </body>
 </html>
