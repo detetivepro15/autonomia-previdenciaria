@@ -1,150 +1,117 @@
-/* DESIGN SYSTEM INSPIRADO NO GOV.BR - MOBILE FIRST */
+/* TEMA FEDERAL MINIMALISTA - MOBILE FIRST */
 :root {
-    --gov-blue: #1351b4;
-    --gov-dark-blue: #0c326f;
-    --gov-light-blue: #eaef25;
-    --gov-yellow: #fcd02c;
-    --gov-gray-bg: #f8f9fa;
-    --gov-card-bg: #ffffff;
-    --gov-text: #333333;
-    --gov-muted: #666666;
-    --gov-border: #dcdcdc;
-    --gov-success: #168821;
-    --gov-warning: #e65100;
+    --fed-blue: #1351b4;
+    --fed-blue-dark: #0c326f;
+    --fed-bg: #ffffff;
+    --fed-card-bg: #f8f9fa;
+    --fed-text: #1f2937;
+    --fed-subtext: #6b7280;
+    --fed-border: #e5e7eb;
+    --fed-accent: #2563eb;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
 
 body {
-    background-color: var(--gov-gray-bg);
-    color: var(--gov-text);
+    background-color: var(--fed-bg);
+    color: var(--fed-text);
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    padding-bottom: 70px; /* Espaço para o menu móvel inferior */
+    padding-bottom: 75px;
 }
 
-/* Barra do Governo */
-.gov-top-bar {
-    background: var(--gov-dark-blue);
-    color: #ffffff;
-    font-size: 0.75rem;
-    padding: 6px 12px;
+/* Cabeçalho Limpo */
+header {
+    background: #ffffff;
+    border-bottom: 1px solid var(--fed-border);
+    padding: 16px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--fed-blue-dark);
+}
+
+.brand i { color: var(--fed-blue); font-size: 1.2rem; }
+
+.user-tag {
+    font-size: 0.78rem;
+    background: #eff6ff;
+    color: var(--fed-blue);
+    padding: 4px 10px;
+    border-radius: 20px;
     font-weight: 600;
 }
 
-.gov-top-bar span { color: var(--gov-yellow); }
-
-/* Cabeçalho Principal */
-header {
-    background: var(--gov-blue);
-    color: #ffffff;
-    padding: 14px 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-header h1 {
-    font-size: 1.1rem;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.user-badge {
-    background: rgba(255,255,255,0.15);
-    padding: 4px 10px;
-    border-radius: 16px;
-    font-size: 0.75rem;
-    border: 1px solid rgba(255,255,255,0.3);
-}
-
-/* Contêiner Geral */
+/* Áreas Principais */
 .app-container {
-    padding: 12px;
-    max-width: 1000px;
+    padding: 16px;
+    max-width: 600px;
     margin: 0 auto;
     width: 100%;
 }
 
-/* Sidebar Oculta no Mobile e visível no Desktop */
-.sidebar { display: none; }
-
-/* Menu Fixo Inferior no Celular */
-.mobile-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: #ffffff;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    border-top: 1px solid var(--gov-border);
-    padding: 8px 0;
-    z-index: 1000;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
-}
-
-.mobile-nav button {
-    background: transparent;
-    border: none;
-    color: var(--gov-muted);
-    font-size: 0.7rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    cursor: pointer;
-    flex: 1;
-}
-
-.mobile-nav button i { font-size: 1.2rem; }
-
-.mobile-nav button.active {
-    color: var(--gov-blue);
-    font-weight: 700;
-}
-
-/* Abas de Conteúdo */
 .tab-content {
     display: none;
-    background: var(--gov-card-bg);
-    padding: 16px;
-    border-radius: 8px;
-    border: 1px solid var(--gov-border);
-    margin-top: 10px;
 }
 
-.tab-content.active { display: block; }
+.tab-content.active {
+    display: block;
+}
 
-.tab-title {
-    font-size: 1.15rem;
-    color: var(--gov-dark-blue);
+.page-title {
+    font-size: 1.25rem;
     font-weight: 700;
+    color: var(--fed-text);
     margin-bottom: 4px;
 }
 
-.tab-subtitle {
-    font-size: 0.82rem;
-    color: var(--gov-muted);
-    margin-bottom: 16px;
+.page-desc {
+    font-size: 0.85rem;
+    color: var(--fed-subtext);
+    margin-bottom: 20px;
 }
 
-/* Botões Estilo Gov.br */
-.btn-gov-primary {
+/* Área de Upload Clean */
+.clean-upload {
+    background: var(--fed-card-bg);
+    border: 2px dashed #cbd5e1;
+    border-radius: 12px;
+    padding: 30px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.clean-upload:active { background: #f1f5f9; }
+.clean-upload i { font-size: 2.2rem; color: var(--fed-blue); margin-bottom: 10px; }
+.clean-upload p { font-size: 0.9rem; font-weight: 600; color: var(--fed-text); }
+.clean-upload span { font-size: 0.75rem; color: var(--fed-subtext); display: block; margin-top: 4px; }
+
+/* Botões do App */
+.btn-federal {
     width: 100%;
-    min-height: 48px;
-    background: var(--gov-blue);
+    height: 50px;
+    background: var(--fed-blue);
     color: #ffffff;
     border: none;
-    border-radius: 24px;
+    border-radius: 10px;
     font-size: 0.95rem;
     font-weight: 600;
     display: flex;
@@ -152,88 +119,123 @@ header h1 {
     justify-content: center;
     gap: 8px;
     cursor: pointer;
-    margin-top: 10px;
+    margin-top: 16px;
 }
 
-.btn-gov-primary:active { background: var(--gov-dark-blue); }
+.btn-federal:active { background: var(--fed-blue-dark); }
 
-/* Caixas de Upload e Resultados */
-.upload-box {
-    border: 2px dashed var(--gov-blue);
-    background: #f0f5ff;
-    border-radius: 8px;
-    padding: 20px;
-    text-align: center;
-    cursor: pointer;
-    margin-top: 12px;
-}
-
-.upload-box i { font-size: 2rem; color: var(--gov-blue); margin-bottom: 8px; }
-
-.result-box {
-    background: #f8fafc;
-    border-left: 4px solid var(--gov-blue);
-    border: 1px solid var(--gov-border);
-    padding: 14px;
-    border-radius: 6px;
-    margin-top: 15px;
+/* Bloco de Resultado */
+.result-card {
+    background: var(--fed-card-bg);
+    border: 1px solid var(--fed-border);
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 16px;
     font-size: 0.88rem;
-    line-height: 1.5;
+    line-height: 1.6;
     white-space: pre-wrap;
+    color: var(--fed-text);
 }
 
-/* Chat Mobile */
-.chat-box {
-    height: 300px;
+/* Chat Minimalista */
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 380px;
+    background: var(--fed-card-bg);
+    border: 1px solid var(--fed-border);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 14px;
     overflow-y: auto;
-    background: #f4f6f9;
-    border: 1px solid var(--gov-border);
-    border-radius: 8px;
-    padding: 12px;
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-.chat-msg {
-    max-width: 85%;
-    padding: 10px 12px;
-    border-radius: 8px;
+.msg {
+    max-width: 82%;
+    padding: 10px 14px;
+    border-radius: 12px;
     font-size: 0.85rem;
+    line-height: 1.4;
 }
 
-.chat-msg.ia { background: #e3eeff; color: var(--gov-dark-blue); align-self: flex-start; }
-.chat-msg.user { background: var(--gov-blue); color: #ffffff; align-self: flex-end; }
+.msg.ia {
+    background: #ffffff;
+    border: 1px solid var(--fed-border);
+    color: var(--fed-text);
+    align-self: flex-start;
+}
 
-.chat-input-group {
+.msg.user {
+    background: var(--fed-blue);
+    color: #ffffff;
+    align-self: flex-end;
+}
+
+.chat-bar {
     display: flex;
+    padding: 10px;
+    background: #ffffff;
+    border-top: 1px solid var(--fed-border);
     gap: 8px;
-    margin-top: 10px;
 }
 
-.chat-input {
+.chat-bar input {
     flex: 1;
-    min-height: 48px;
-    padding: 0 12px;
-    border: 1px solid var(--gov-border);
-    border-radius: 24px;
-    font-size: 0.9rem;
+    border: 1px solid var(--fed-border);
+    border-radius: 20px;
+    padding: 0 14px;
+    font-size: 0.88rem;
     outline: none;
+    height: 42px;
 }
 
-/* Rodapé */
-footer {
-    text-align: center;
-    padding: 16px;
-    font-size: 0.75rem;
-    color: var(--gov-muted);
-    margin-top: auto;
+.chat-bar button {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--fed-blue);
+    color: white;
+    border: none;
+    cursor: pointer;
 }
 
-/* Adaptação para Telas Maiores (Desktop) */
-@media (min-width: 768px) {
-    body { padding-bottom: 0; }
-    .mobile-nav { display: none; }
-    .app-container { display: flex; gap: 20px; }
-    .sidebar { display: block; width: 260px; }
+/* Menu de Navegação Inferior (Estilo App) */
+.nav-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border-top: 1px solid var(--fed-border);
+    display: flex;
+    justify-content: space-around;
+    padding: 8px 0;
+    z-index: 200;
+}
+
+.nav-bottom button {
+    background: transparent;
+    border: none;
+    color: var(--fed-subtext);
+    font-size: 0.7rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+    cursor: pointer;
+}
+
+.nav-bottom button i { font-size: 1.25rem; }
+
+.nav-bottom button.active {
+    color: var(--fed-blue);
+    font-weight: 700;
 }
