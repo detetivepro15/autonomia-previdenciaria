@@ -1,12 +1,10 @@
 /**
- * AUTONOMIA PREVIDENCIÁRIA - LÓGICA PRINCIPAL (js/app.js)
- * Módulo de manipulação de DOM, cálculos, validações e chat.
+ * AUTONOMIA PREVIDENCIÁRIA - LÓGICA DE PROCESSAMENTO E CÁLCULO
+ * Arquivo: js/app.js
  */
 
 /**
- * Alterna a exibição das abas da aplicação (Single Page Application)
- * @param {string} tabId - ID do contêiner da aba
- * @param {HTMLElement} element - Botão clicado para aplicar o estilo ativo
+ * Alterna a exibição das abas da aplicação (SPA)
  */
 function openTab(tabId, element) {
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
@@ -16,124 +14,142 @@ function openTab(tabId, element) {
 }
 
 /**
- * Simula a busca automática conectando às bases Gov.br
+ * Calcula a diferença em anos, meses e dias entre duas datas
+ * @param {string} dataInicio - Data no formato YYYY-MM-DD
+ * @param {string} dataFim - Data no formato YYYY-MM-DD
+ * @returns {object} Objeto com anos, meses, dias e total em anos decimais
  */
-function executarSincronizacao() {
-    const box = document.getElementById('res-busca');
-    box.style.display = 'block';
-    box.innerHTML = "⏳ <strong>Conectando aos servidores do Gov.br e Dataprev...</strong>\n\n✔ Autenticação OAuth 2.0: Concluída\n✔ Extrato CNIS: 38 vínculos recuperados\n✔ eSocial / CTPS Digital: Sincronizados\n✔ Saúde Ocupacional: 4 PPPs identificados\n\n🎉 <strong>BUSCA AUTOMÁTICA FINALIZADA COM SUCESSO!</strong>";
-    processarCalculoContributivo(15, 12.4);
-}
+function calcularDiferencaDatas(dataInicio, dataFim) {
+    const d1 = new Date(dataInicio);
+    const d2 = new Date(dataFim);
 
-/**
- * Exibe o nome e o tamanho do arquivo selecionado no input manual
- * @param {HTMLInputElement} input - Elemento HTML do tipo file
- */
-function mostrarArquivoSelecionado(input) {
-    const infoDiv = document.getElementById('file-info');
-    if (input.files && input.files[0]) {
-        const file = input.files[0];
-        infoDiv.innerHTML = `📄 Arquivo selecionado: <strong>${file.name}</strong> (${(file.size / 1024).toFixed(1)} KB)`;
-    } else {
-        infoDiv.innerHTML = "";
+    let anos = d2.getFullYear() - d1.getFullYear();
+    let meses = d2.getMonth() - d1.getMonth();
+    let dias = d2.getDate() - d1.getDate();
+
+    if (dias < 0) {
+        meses--;
+        dias += 30; // Aproximação padrão previdenciária
     }
+    if (meses < 0) {
+        anos--;
+        meses += 12;
+    }
+
+    // Converte tudo para anos decimais para aplicação do fator
+    const totalAnosDecimais = anos + (meses / 12) + (dias / 365);
+
+    return { anos, meses, dias, totalAnosDecimais };
 }
 
 /**
- * Processa o documento enviado manualmente e simula a leitura de dados (OCR)
+ * Processa os documentos enviados manualmente e preenche automaticamente os períodos
  */
 function enviarDocumentoManual() {
     const input = document.getElementById('file-input');
     const box = document.getElementById('res-busca');
 
     if (!input.files || input.files.length === 0) {
-        alert("Por favor, selecione um arquivo de documento antes de enviar.");
+        alert("Por favor, selecione um arquivo antes de enviar.");
         return;
     }
 
     const file = input.files[0];
-    const tamanhoMaximo = 5 * 1024 * 1024; // Limitador de 5 MB
-
-    if (file.size > tamanhoMaximo) {
-        alert("Atenção: O arquivo deve ter no máximo 5 MB.");
-        return;
-    }
-
     box.style.display = 'block';
-    box.innerHTML = `⏳ <strong>Lendo e extraindo dados de: ${file.name}...</strong>\n\n` +
-                    `✔ OCR / Parsing de Texto: Concluído\n` +
-                    `✔ Segurado Identificado: José Junior de Oliveira\n` +
-                    `✔ Documento: Perfil Profissiográfico Previdenciário (PPP)\n` +
-                    `✔ Registros integrados ao Módulo de Inteligência Sociojurídica.`;
+    box.innerHTML = `⏳ <strong>Lendo e extraindo dados do arquivo: ${file.name}...</strong>\n\n` +
+                    `✔ OCR/Parsing Concluído: 2 períodos identificados no documento.\n` +
+                    `✔ Dados enviados automaticamente para o Histórico Contributivo!`;
 
-    // Processa automaticamente os tempos no histórico
-    processarCalculoContributivo(12, 9.8);
+    // Simulação de períodos extraídos do documento lido
+    const periodosExtraidos = [
+        { empresa: "Metalúrgica Catanduva", inicio: "2010-01-15", fim: "2018-06-30", especial: true },
+        { empresa: "Comércio de Peças Ltda", inicio: "2018-08-01", fim: "2024-02-28", especial: false }
+    ];
+
+    preencherHistoricoAutomatico(periodosExtraidos);
 }
 
 /**
- * Realiza a soma do tempo comum e converte tempo especial (Fator 1.4)
- * @param {number} anosComuns - Anos em atividade comum
- * @param {number} anosEspeciais - Anos sob agentes nocivos
+ * Preenche a tela de Histórico com os períodos extraídos e calcula os tempos
  */
-function processarCalculoContributivo(anosComuns, anosEspeciais) {
-    const FATOR_CONVERSAO = 1.4; // Multiplicador masculino padrão (25 anos)
-    const tempoEspecialConvertido = anosEspeciais * FATOR_CONVERSAO;
-    const tempoTotalCalculado = anosComuns + tempoEspecialConvertido;
-
+function preencherHistoricoAutomatico(periodos) {
     const boxHistorico = document.getElementById('res-historico');
+    let htmlResult = `<strong>[PREENCHIMENTO AUTOMÁTICO VIA DOCUMENTO]</strong>\n\n`;
+    let tempoTotalGeral = 0;
+
+    periodos.forEach((p, index) => {
+        const diff = calcularDiferencaDatas(p.inicio, p.fim);
+        let tempoEfetivo = diff.totalAnosDecimais;
+        let obsEspecial = "";
+
+        // Aplica o fator 1.4 se o período for especial
+        if (p.especial) {
+            tempoEfetivo = diff.totalAnosDecimais * 1.4;
+            obsEspecial = ` (Especial 1.4 -> ${tempoEfetivo.toFixed(2)} anos)`;
+        }
+
+        tempoTotalGeral += tempoEfetivo;
+
+        htmlResult += `📌 <strong>Período ${index + 1}: ${p.empresa}</strong>\n` +
+                     `   • Entrado: ${p.inicio} | Saída: ${p.fim}\n` +
+                     `   • Tempo Bruto: ${diff.anos} anos, ${diff.meses} meses e ${diff.dias} dias${obsEspecial}\n\n`;
+    });
+
+    htmlResult += `--------------------------------------------------\n` +
+                  `🎯 <strong>TEMPO TOTAL CONSOLIDADO: ${tempoTotalGeral.toFixed(2)} anos</strong>`;
+
     if (boxHistorico) {
-        boxHistorico.innerHTML = `<strong>[DIAGNÓSTICO CONTRIBUTIVO PROCESSADO]</strong>\n\n` +
-            `• Tempo Comum Apurado: <strong>${anosComuns} anos</strong>\n` +
-            `• Tempo Especial Apurado: <strong>${anosEspeciais} anos</strong>\n` +
-            `• Fator de Conversão Especial (1.4): <strong>+${tempoEspecialConvertido.toFixed(2)} anos</strong>\n` +
-            `--------------------------------------------------\n` +
-            `🎯 <strong>TEMPO TOTAL DE CONTRIBUIÇÃO: ${tempoTotalCalculado.toFixed(2)} anos</strong>`;
+        boxHistorico.innerHTML = htmlResult;
     }
 }
 
 /**
- * Audita os laudos ambientais e PPPs
+ * Função de sincronização com Gov.br
  */
+function executarSincronizacao() {
+    const box = document.getElementById('res-busca');
+    box.style.display = 'block';
+    box.innerHTML = "⏳ <strong>Conectando aos servidores do Gov.br...</strong>\n\n✔ Extrato CNIS e eSocial sincronizados!";
+    
+    enviarDocumentoManual();
+}
+
+function mostrarArquivoSelecionado(input) {
+    const infoDiv = document.getElementById('file-info');
+    if (input.files && input.files[0]) {
+        infoDiv.innerHTML = `📄 Arquivo selecionado: <strong>${input.files[0].name}</strong>`;
+    }
+}
+
 function analisarPPPAuto() {
     const box = document.getElementById('res-ppp');
     box.style.display = 'block';
-    box.innerHTML = "<strong>[DIAGNÓSTICO AUTOMÁTICO DE LAUDOS]</strong>\n\n• Ruído Contínuo: 88.5 dB(A) (Acima do limite de tolerância)\n• Agentes Químicos: Hidrocarbonetos e Solventes\n• Tempo Especial Apurado: 9 anos e 9 meses\n• Enquadramento: Apto para conversão multiplicador 1.4 ou Aposentadoria Especial.";
+    box.innerHTML = "<strong>[DIAGNÓSTICO DE LAUDOS]</strong>\n\n• Ruído: 88.5 dB(A) -> Período Especial Aprovado.";
 }
 
-/**
- * Gera a minuta da petição exordial
- */
 function gerarMinutaAuto() {
     const box = document.getElementById('res-minuta');
     box.style.display = 'block';
-    box.innerHTML = "EXCELENTÍSSIMO(A) SENHOR(A) DOUTOR(A) JUIZ(A) FEDERAL DA VARA PREVIDENCIÁRIA DE CATANDUVA/SP\n\nREQUERENTE: José Junior de Oliveira\nREQUERIDO: INSS\n\nDOS FATOS E DO DIREITO:\nConforme dados unificados e processados via integração manual/autônoma, verifica-se que o Autor esteve exposto a agentes nocivos (ruído 88.5 dB(A) e químicos)...\n\n[RASCUNHO GERADO AUTOMATICAMENTE POR IA - SUJEITO À ASSINATURA DE ADVOGADO]";
+    box.innerHTML = "EXCELENTÍSSIMO(A) SENHOR(A) DOUTOR(A) JUIZ(A) FEDERAL...\n\n[Petição Gerada com base nos períodos do documento]";
 }
 
-/**
- * Gerencia as mensagens enviadas no Chat com o Assistente Gemini
- */
 function enviarMensagemChat() {
     const input = document.getElementById('chat-input-text');
     const box = document.getElementById('chat-messages');
     const texto = input.value.trim();
-
     if (!texto) return;
 
-    // Adiciona a mensagem do usuário na tela
     const userDiv = document.createElement('div');
     userDiv.className = 'chat-msg user';
     userDiv.innerText = texto;
     box.appendChild(userDiv);
-
     input.value = '';
-    box.scrollTop = box.scrollHeight;
 
-    // Resposta simulada da IA com base no contexto do projeto
     setTimeout(() => {
         const iaDiv = document.createElement('div');
         iaDiv.className = 'chat-msg ia';
-        iaDiv.innerHTML = `<strong>[Gemini Previdenciário]:</strong> Analisei seu comando ("<em>${texto}</em>"). Com base no Decreto 3.048/99 e nas regras de conversão, os períodos apurados garantem a contagem otimizada do tempo de contribuição com o multiplicador 1.4.`;
+        iaDiv.innerHTML = `<strong>[Gemini Previdenciário]:</strong> Os períodos do documento foram lidos e calculados com sucesso.`;
         box.appendChild(iaDiv);
         box.scrollTop = box.scrollHeight;
-    }, 600);
+    }, 500);
 }
