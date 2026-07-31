@@ -3,119 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Autonomia Previdenciária | Plataforma de Inteligência & Diagnóstico Sociojurídico</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Autonomia Previdenciária | Gov.br Style</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="top-info-bar">
-        <div><i class="fa-solid fa-scale-balanced"></i> Portal de Diagnóstico & Governança Previdenciária</div>
-        <div>NUP do Processo/Estratégia: <span class="protocol">36777.255331/2026-99</span> | Conforme Res. OAB & CPC Art. 77</div>
+    <div class="gov-top-bar">
+        <div><i class="fa-solid fa-building-columns"></i> BRASIL | <span>Autonomia Previdenciária</span></div>
+        <div>NUP: 36777.255331/2026-99</div>
     </div>
     <header>
-        <h1><i class="fa-solid fa-shield-halved"></i> Autonomia Previdenciária <span class="badge-gov">Sincronização & Envio Manual</span></h1>
-        <div class="user-info"><i class="fa-solid fa-user-check"></i> <span><strong>José Junior de Oliveira</strong> (CBO 2521-05)</span></div>
+        <h1><i class="fa-solid fa-shield-halved"></i> Autonomia Previdenciária</h1>
+        <div class="user-badge"><i class="fa-solid fa-user"></i> José Junior</div>
     </header>
+
     <div class="app-container">
-        <div class="sidebar">
-            <div class="sidebar-title">Módulos de Auditoria</div>
-            <button class="nav-btn active" onclick="openTab('busca-auto', this)"><i class="fa-solid fa-bolt"></i> Busca / Envio Manual</button>
-            <button class="nav-btn" onclick="openTab('ppp', this)"><i class="fa-solid fa-file-waveform"></i> Analisador de PPP e Laudos</button>
-            <button class="nav-btn" onclick="openTab('chat', this)"><i class="fa-solid fa-robot"></i> Assistente IA (Gemini)</button>
-            <button class="nav-btn" onclick="openTab('historico', this)"><i class="fa-solid fa-timeline"></i> Histórico CNIS & CTPS</button>
-            <button class="nav-btn" onclick="openTab('minuta', this)"><i class="fa-solid fa-file-signature"></i> Gerador de Minutas</button>
-            <div class="sidebar-box">
-                <h4><i class="fa-solid fa-lock"></i> Segurança & LGPD</h4>
-                <p>Dados protegidos via OAuth 2.0 e criptografia de ponta a ponta.</p>
-            </div>
-        </div>
-        <div class="workspace">
-            <div class="status-banner">
-                <div class="sync-status"><div class="pulse-dot"></div> <span><strong>Status do Sistema:</strong> Pronto para recepção automática e manual.</span></div>
-                <span style="font-size:0.8rem; color:var(--text-muted);"><i class="fa-solid fa-arrows-rotate"></i> Tempo Real</span>
-            </div>
+        <main class="workspace">
+            <!-- ABA 1: ENVIO MANUAL -->
             <div id="busca-auto" class="tab-content active">
-                <div class="tab-header">
-                    <div>
-                        <div class="tab-title"><i class="fa-solid fa-cloud-arrow-down" style="color:var(--accent-blue);"></i> Resgate & Envio Manual de Documentos</div>
-                        <div class="tab-subtitle">Conexão via Gov.br ou upload manual de arquivos (CNIS, PPP, CTPS).</div>
-                    </div>
+                <div class="tab-title"><i class="fa-solid fa-file-arrow-up"></i> Envio de Documentos</div>
+                <div class="tab-subtitle">Carregue extratos CNIS, CTPS ou PPP para análise automática.</div>
+                
+                <div class="upload-box" onclick="document.getElementById('file-input').click()">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <p><strong>Toque aqui para enviar o documento</strong></p>
+                    <p style="font-size:0.75rem; color:var(--gov-muted); margin-top:4px;">Formatos aceitos: PDF, PNG, JPG (Até 5MB)</p>
+                    <input type="file" id="file-input" accept=".pdf,.png,.jpg,.jpeg" style="display:none;" onchange="mostrarArquivoSelecionado(this)">
+                    <div id="file-info" style="margin-top:8px; font-weight:600; color:var(--gov-blue);"></div>
                 </div>
-                <div class="metrics-grid">
-                    <div class="metric-card"><div class="title">Fontes Mapeadas</div><div class="value">INSS / eSocial / CTPS</div></div>
-                    <div class="metric-card"><div class="title">Modo de Operação</div><div class="value">Manual / Automático</div></div>
-                    <div class="metric-card"><div class="title">Status do Processamento</div><div class="value">Pronto</div></div>
-                </div>
-                <button class="btn-gov" onclick="executarSincronizacao()"><i class="fa-solid fa-key"></i> Autenticar Gov.br & Iniciar Busca Automática</button>
-                <div class="upload-container">
-                    <div class="upload-title"><i class="fa-solid fa-file-arrow-up"></i> Envio Manual de Documentos para Análise</div>
-                    <div class="upload-box" onclick="document.getElementById('file-input').click()">
-                        <i class="fa-solid fa-folder-open"></i>
-                        <p><strong>Clique aqui</strong> para selecionar arquivos (PDF, PNG, JPG) do CNIS, CTPS ou PPP.</p>
-                        <input type="file" id="file-input" accept=".pdf,.png,.jpg,.jpeg" onchange="mostrarArquivoSelecionado(this)">
-                        <div id="file-info" class="file-info"></div>
-                    </div>
-                    <button class="btn-primary" style="margin-top: 15px;" onclick="enviarDocumentoManual()"><i class="fa-solid fa-upload"></i> Processar Documento Enviado</button>
-                </div>
+
+                <button class="btn-gov-primary" onclick="enviarDocumentoManual()"><i class="fa-solid fa-magnifying-glass"></i> Processar Documento</button>
                 <div id="res-busca" class="result-box" style="display:none;"></div>
             </div>
+
+            <!-- ABA 2: LAUDOS E PPP -->
             <div id="ppp" class="tab-content">
-                <div class="tab-header">
-                    <div>
-                        <div class="tab-title"><i class="fa-solid fa-microscope" style="color:var(--accent-blue);"></i> Auditoria de Laudos Ambientais e PPPs</div>
-                        <div class="tab-subtitle">Processamento computacional de dosimetrias e fatores de risco.</div>
-                    </div>
-                </div>
-                <button class="btn-primary" onclick="analisarPPPAuto()"><i class="fa-solid fa-wand-magic-sparkles"></i> Processar Laudos Resgatados/Enviados</button>
+                <div class="tab-title"><i class="fa-solid fa-microscope"></i> Auditoria de PPP / Laudos</div>
+                <div class="tab-subtitle">Análise de exposição a ruídos e agentes químicos.</div>
+                <button class="btn-gov-primary" onclick="analisarPPPAuto()"><i class="fa-solid fa-wand-magic-sparkles"></i> Auditar Laudos</button>
                 <div id="res-ppp" class="result-box" style="display:none;"></div>
             </div>
+
+            <!-- ABA 3: CHAT IA -->
             <div id="chat" class="tab-content">
-                <div class="tab-header">
-                    <div>
-                        <div class="tab-title"><i class="fa-solid fa-brain" style="color:var(--accent-blue);"></i> Assistente IA Especializado (Gemini)</div>
-                        <div class="tab-subtitle">Tradução de jargão técnico e suporte no diagnóstico sociojurídico.</div>
-                    </div>
-                </div>
+                <div class="tab-title"><i class="fa-solid fa-brain"></i> Assistente IA (Gemini)</div>
+                <div class="tab-subtitle">Suporte técnico e interpretação das regras.</div>
                 <div class="chat-box" id="chat-messages">
                     <div class="chat-msg ia">
-                        <strong>[SISTEMA DE IA PRONTO]:</strong> Olá, José Junior! Todos os dados e laudos enviados estão integrados. Qual dúvida técnica ou jurídica você deseja analisar agora?
+                        <strong>[Assistente Gov.br]:</strong> Olá! Envie sua dúvida sobre conversão de períodos ou exigências de laudos técnicos.
                     </div>
                 </div>
                 <div class="chat-input-group">
-                    <input type="text" id="chat-input-text" class="chat-input" placeholder="Digite sua dúvida ou comando (ex: Como funciona a conversão 1.4?)..." onkeypress="if(event.key === 'Enter') enviarMensagemChat()">
-                    <button class="btn-primary" onclick="enviarMensagemChat()"><i class="fa-solid fa-paper-plane"></i> Enviar</button>
+                    <input type="text" id="chat-input-text" class="chat-input" placeholder="Digite sua mensagem..." onkeypress="if(event.key === 'Enter') enviarMensagemChat()">
+                    <button class="btn-gov-primary" style="width: auto; padding: 0 16px;" onclick="enviarMensagemChat()"><i class="fa-solid fa-paper-plane"></i></button>
                 </div>
             </div>
+
+            <!-- ABA 4: HISTÓRICO CONTRIBUTIVO -->
             <div id="historico" class="tab-content">
-                <div class="tab-header">
-                    <div>
-                        <div class="tab-title"><i class="fa-solid fa-list-check" style="color:var(--accent-blue);"></i> Histórico Contributivo Unificado</div>
-                        <div class="tab-subtitle">Linha do tempo consolidando períodos urbanos, rurais e especiais.</div>
-                    </div>
-                </div>
-                <div id="res-historico" class="result-box" style="margin-top:0;">✔ Aguardando envio de documentos ou busca para calcular.</div>
+                <div class="tab-title"><i class="fa-solid fa-list-check"></i> Histórico Contributivo</div>
+                <div class="tab-subtitle">Consolidação e cálculo conforme normas pré/pós 1995.</div>
+                <div id="res-historico" class="result-box" style="margin-top:0;">Enve um documento na aba de envio para visualizar a soma final.</div>
             </div>
+
+            <!-- ABA 5: MINUTAS -->
             <div id="minuta" class="tab-content">
-                <div class="tab-header">
-                    <div>
-                        <div class="tab-title"><i class="fa-solid fa-scale-unbalanced-flip" style="color:var(--accent-blue);"></i> Gerador de Minutas Exordiais</div>cat << 'EOF' >> index.html
-                    </div>
-                </div>
-                <button class="btn-primary" onclick="gerarMinutaAuto()"><i class="fa-solid fa-file-export"></i> Gerar Rascunho Exordial</button>
+                <div class="tab-title"><i class="fa-solid fa-file-signature"></i> Gerador de Minutas</div>
+                <div class="tab-subtitle">Sintetizador automático de rascunhos.</div>
+                <button class="btn-gov-primary" onclick="gerarMinutaAuto()"><i class="fa-solid fa-file-export"></i> Gerar Petição</button>
                 <div id="res-minuta" class="result-box" style="display:none;"></div>
             </div>
-            <div class="legal-footer-box">
-                <i class="fa-solid fa-circle-exclamation" style="font-size:1.2rem;"></i>
-                <div><strong>Aviso de Governança:</strong> Ferramenta de apoio técnico. Decisões e pareceres dependem da supervisão de advogado inscrito na OAB (Art. 77 do CPC).</div>
-            </div>
-        </div>
+        </main>
     </div>
+
+    <!-- NAVEGAÇÃO MÓVEL INFERIOR (BOTTOM NAV) -->
+    <nav class="mobile-nav">
+        <button class="active" onclick="openTab('busca-auto', this)"><i class="fa-solid fa-file-arrow-up"></i>Envio</button>
+        <button onclick="openTab('ppp', this)"><i class="fa-solid fa-microscope"></i>Laudos</button>
+        <button onclick="openTab('chat', this)"><i class="fa-solid fa-robot"></i>Assistente</button>
+        <button onclick="openTab('historico', this)"><i class="fa-solid fa-list-check"></i>Histórico</button>
+        <button onclick="openTab('minuta', this)"><i class="fa-solid fa-file-signature"></i>Minutas</button>
+    </nav>
+
     <footer>
-        <p><strong>Autonomia Previdenciária</strong> | Democratizando o Acesso aos Direitos do Trabalhador</p>
-        <p>Estrategista & Administrador Responsável: <strong>José Junior de Oliveira</strong> (CBO 2521-05)</p>
-        <p style="color:#64748b; font-size:0.78rem; margin-top:8px;">E-mail: nairana06@gmail.com | WhatsApp: (33) 99862-9217 | Catanduva - SP</p>
+        <p><strong>Autonomia Previdenciária</strong> | Padrão Gov.br</p>
+        <p>Responsável: José Junior de Oliveira (CBO 2521-05)</p>
     </footer>
+
     <script src="js/app.js"></script>
 </body>
 </html>
