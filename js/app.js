@@ -1,6 +1,6 @@
 /**
- * AUTONOMIA PREVIDENCIÁRIA - LÓGICA DE PROCESSAMENTO & REGRAS PREVIDENCIÁRIAS
- * Módulo com suporte às normas pré-1995 (Categoria Profissional) e pós-1995 (Laudos/PPP).
+ * AUTONOMIA PREVIDENCIÁRIA - LÓGICA DE PROCESSAMENTO E REGRAS PREVIDENCIÁRIAS
+ * Módulo de validação temporal (Pré e Pós 1995) com alertas de exigência do PPP.
  */
 
 /**
@@ -26,7 +26,7 @@ function calcularDiferencaDatas(dataInicio, dataFim) {
 
     if (dias < 0) {
         meses--;
-        dias += 30; // Convenção de cálculo previdenciário (mês comercial)
+        dias += 30; // Convenção de cálculo previdenciário
     }
     if (meses < 0) {
         anos--;
@@ -38,7 +38,7 @@ function calcularDiferencaDatas(dataInicio, dataFim) {
 }
 
 /**
- * Processa o documento enviado aplicando as normas pré e pós 1995
+ * Processa o documento enviado aplicando as regras legais e alertas do PPP
  */
 function enviarDocumentoManual() {
     const input = document.getElementById('file-input');
@@ -53,10 +53,10 @@ function enviarDocumentoManual() {
     box.style.display = 'block';
     box.innerHTML = `⏳ <strong>Lendo documento: ${file.name}...</strong>\n\n` +
                     `✔ OCR & Leitura de Vínculos: Concluído\n` +
-                    `✔ Aplicando regras da Lei 9.032/95 (Março de 1995)\n` +
+                    `✔ Verificando marcos temporais (Lei nº 9.032/1995)\n` +
                     `✔ Dados processados e enviados para o Histórico Contributivo!`;
 
-    // Lista de períodos extraídos simulando documentos reais (CNIS / PPP / CTPS)
+    // Períodos de teste extraídos do documento
     const periodosDocumento = [
         {
             empresa: "Indústria Metalúrgica S/A",
@@ -70,7 +70,7 @@ function enviarDocumentoManual() {
             inicio: "1996-02-01",
             fim: "2008-08-15",
             cargo: "Mecânico Industrial",
-            agenteNocivo: "Ruído 89.2 dB(A) e Óleos Minerais (Comprovado em PPP)"
+            agenteNocivo: "Ruído 89.2 dB(A) e Óleos Minerais"
         },
         {
             empresa: "Comércio de Serviços Gerais",
@@ -85,18 +85,19 @@ function enviarDocumentoManual() {
 }
 
 /**
- * Aplica os critérios legais pré-1995 e pós-1995 e calcula a soma final
+ * Aplica os critérios legais pré/pós 1995 e exibe aviso de necessidade do PPP
  */
 function processarPeriodosComNormas1995(periodos) {
     const boxHistorico = document.getElementById('res-historico');
-    const DATA_CORTE_1995 = new Date("1995-04-28"); // Marco temporal da Lei 9.032/95
-    const FATOR_CONVERSAO = 1.4; // Multiplicador masculino
+    const DATA_CORTE_1995 = new Date("1995-04-28");
+    const FATOR_CONVERSAO = 1.4;
 
     let htmlResult = `<strong>[DIAGNÓSTICO E SOMA FINAL DE CONTRIBUIÇÃO]</strong>\n\n`;
     let tempoTotalGeral = 0;
     let tempoComumTotal = 0;
     let tempoEspecialPre1995 = 0;
     let tempoEspecialPos1995 = 0;
+    let necessitaPPP = false;
 
     periodos.forEach((p, index) => {
         const diff = calcularDiferencaDatas(p.inicio, p.fim);
@@ -104,19 +105,20 @@ function processarPeriodosComNormas1995(periodos) {
         let tempoEfetivo = diff.totalAnosDecimais;
         let enquadramentoLegis = "";
 
-        // Regra 1: Período até 28/04/1995 (Enquadramento por Categoria Profissional)
-        if (dataFimPeriodo <= DATA_CORTE_1995 && p.cargo.includes("Metalúrgico") || p.cargo.includes("Soldador")) {
+        // Regra 1: Até 28/04/1995 -> Categoria Profissional (Não exige PPP obrigatório)
+        if (dataFimPeriodo <= DATA_CORTE_1995 && (p.cargo.includes("Metalúrgico") || p.cargo.includes("Soldador"))) {
             tempoEfetivo = diff.totalAnosDecimais * FATOR_CONVERSAO;
             tempoEspecialPre1995 += tempoEfetivo;
             enquadramentoLegis = ` [Pré-1995: Categoria Profissional (Fator 1.4) -> ${tempoEfetivo.toFixed(2)} anos]`;
         } 
-        // Regra 2: Período após 28/04/1995 (Comprovação por Laudo/PPP)
-        else if (dataFimPeriodo > DATA_CORTE_1995 && p.agenteNocivo.includes("Ruído") || p.agenteNocivo.includes("Óleos")) {
+        // Regra 2: Após 28/04/1995 -> Exige obrigatoriamente apresentação de PPP
+        else if (dataFimPeriodo > DATA_CORTE_1995 && (p.agenteNocivo.includes("Ruído") || p.agenteNocivo.includes("Óleos"))) {
             tempoEfetivo = diff.totalAnosDecimais * FATOR_CONVERSAO;
             tempoEspecialPos1995 += tempoEfetivo;
-            enquadramentoLegis = ` [Pós-1995: Laudo Técnico/PPP (Fator 1.4) -> ${tempoEfetivo.toFixed(2)} anos]`;
+            necessitaPPP = true;
+            enquadramentoLegis = ` [Pós-1995: Simulado via Agentes Nocivos (Fator 1.4) -> ${tempoEfetivo.toFixed(2)} anos] ⚠️ (Requer PPP)`;
         } 
-        // Regra 3: Período Comum
+        // Regra 3: Atividade Comum
         else {
             tempoComumTotal += tempoEfetivo;
             enquadramentoLegis = ` [Atividade Comum]`;
@@ -128,15 +130,21 @@ function processarPeriodosComNormas1995(periodos) {
                      `   • Cargo: ${p.cargo}\n` +
                      `   • Período: ${p.inicio} até ${p.fim}\n` +
                      `   • Tempo Bruto: ${diff.anos} anos, ${diff.meses} meses e ${diff.dias} dias\n` +
-                     `   • Enquadramento Legal:${enquadramentoLegis}\n\n`;
+                     `   • Enquadramento:${enquadramentoLegis}\n\n`;
     });
 
     htmlResult += `--------------------------------------------------\n` +
                   `📊 <strong>RESUMO CONSOLIDADO DOS PERÍODOS:</strong>\n` +
                   `• Tempo Comum Simples: <strong>${tempoComumTotal.toFixed(2)} anos</strong>\n` +
                   `• Tempo Especial Pré-1995 (Convertido 1.4): <strong>${tempoEspecialPre1995.toFixed(2)} anos</strong>\n` +
-                  `• Tempo Especial Pós-1995 (Convertido 1.4): <strong>${tempoEspecialPos1995.toFixed(2)} anos</strong>\n\n` +
-                  `🎯 <strong>SOMA FINAL DE CONTRIBUIÇÃO: ${tempoTotalGeral.toFixed(2)} ANOS</strong>`;
+                  `• Tempo Especial Pós-1995 (Simulado 1.4): <strong>${tempoEspecialPos1995.toFixed(2)} anos</strong>\n\n` +
+                  `🎯 <strong>SOMA FINAL DE CONTRIBUIÇÃO: ${tempoTotalGeral.toFixed(2)} ANOS</strong>\n\n`;
+
+    // Aviso Didático e Jurídico Obrigatorio sobre o PPP
+    if (necessitaPPP) {
+        htmlResult += `⚠️ <strong>AVISO LEGAL IMPORTANTE SOBRE PERÍODOS PÓS-28/04/1995:</strong>\n` +
+                      `Para os períodos trabalhados após 28/04/1995, a conversão simulada acima só terá validade legal perante o INSS ou a Justiça mediante a apresentação do <strong>PPP (Perfil Profissiográfico Previdenciário)</strong> devidamente assinado e acompanhado do laudo técnico (LTCAT).`;
+    }
 
     if (boxHistorico) {
         boxHistorico.innerHTML = htmlResult;
@@ -160,13 +168,13 @@ function mostrarArquivoSelecionado(input) {
 function analisarPPPAuto() {
     const box = document.getElementById('res-ppp');
     box.style.display = 'block';
-    box.innerHTML = "<strong>[DIAGNÓSTICO DE LAUDOS]</strong>\n\n• Ruído: 89.2 dB(A) -> Período Especial Aprovado conforme NR-15 e Decreto 3.048/99.";
+    box.innerHTML = "<strong>[DIAGNÓSTICO DE LAUDOS E PPP]</strong>\n\n• Ruído: 89.2 dB(A) -> Laudo e PPP válidos para enquadramento especial pós-1995.";
 }
 
 function gerarMinutaAuto() {
     const box = document.getElementById('res-minuta');
     box.style.display = 'block';
-    box.innerHTML = "EXCELENTÍSSIMO(A) SENHOR(A) DOUTOR(A) JUIZ(A) FEDERAL DA VARA PREVIDENCIÁRIA DE CATANDUVA/SP...\n\n[Petição Gerada com base nas Regras Pré-1995 e Laudos Pós-1995]";
+    box.innerHTML = "EXCELENTÍSSIMO(A) SENHOR(A) DOUTOR(A) JUIZ(A) FEDERAL DA VARA PREVIDENCIÁRIA DE CATANDUVA/SP...\n\n[Petição Gerada com menção aos PPPs para períodos pós-1995]";
 }
 
 function enviarMensagemChat() {
@@ -184,7 +192,7 @@ function enviarMensagemChat() {
     setTimeout(() => {
         const iaDiv = document.createElement('div');
         iaDiv.className = 'chat-msg ia';
-        iaDiv.innerHTML = `<strong>[Gemini Previdenciário]:</strong> Os períodos anteriores a 28/04/1995 foram enquadrados por categoria profissional, e os posteriores validados via laudo técnico.`;
+        iaDiv.innerHTML = `<strong>[Gemini Previdenciário]:</strong> Os períodos anteriores a 28/04/1995 dispensam laudo técnico. Para os posteriores, o PPP é documento indispensável.`;
         box.appendChild(iaDiv);
         box.scrollTop = box.scrollHeight;
     }, 500);
